@@ -7,22 +7,30 @@ public class Main {
     private static final List<Proyecto> proyectos = new ArrayList<>();
     private static Proyecto proyectoActual = null;
 
+
     public static void main(String[] args) {
         mostrarBienvenida();
         boolean salir = false;
 
         while (!salir) {
+            mostrarEncabezado();
             mostrarMenu();
             int opcion = leerEntero("Selecciona una opción: ");
 
             switch (opcion) {
                 case 1 -> crearProyecto();
                 case 2 -> seleccionarProyecto();
-                case 3 -> agregarTarea();
+                    case 3 -> agregarTarea();
                 case 4 -> cambiarEstadoTarea();
-                case 5 -> mostrarTareas();
+                case 5 -> {
+                    mostrarTareas();
+                    presionarEnterParaContinuar();
+                }
                 case 6 -> eliminarTarea();
-                case 7 -> listarProyectos();
+                case 7 -> {
+                    listarProyectos();
+                    presionarEnterParaContinuar();
+                }
                 case 0 -> salir = true;
                 default -> System.out.println("Opción no válida. Intenta de nuevo.");
             }
@@ -30,6 +38,7 @@ public class Main {
 
         System.out.println("¡Gracias por usar el Sistema de Gestión de Proyectos!");
     }
+ 
 
     private static void mostrarBienvenida() {
         System.out.println("============================================");
@@ -38,17 +47,36 @@ public class Main {
         System.out.println("Bienvenido. Crea proyectos, añade tareas, cambia estados y administra tus tareas.\n");
     }
 
-    private static void mostrarMenu() {
-        System.out.println("Menú:");
-        System.out.println("1. Crear proyecto");
-        System.out.println("2. Seleccionar proyecto");
-        System.out.println("3. Agregar tarea");
-        System.out.println("4. Cambiar estado de tarea");
-        System.out.println("5. Mostrar lista de tareas");
-        System.out.println("6. Eliminar tarea");
-        System.out.println("7. Listar proyectos");
-        System.out.println("0. Salir");
+      //codigo añadido para interfaz
+
+    private static void mostrarEncabezado() {
+    System.out.println("===============================================");
+    System.out.println("   Sistema de Gestión de Proyectos - Mini Jira");
+    System.out.println("===============================================");
+    if (proyectoActual != null) {
+        System.out.println("Proyecto activo: " + proyectoActual.getNombre());
+        System.out.println("Tareas actuales: " + proyectoActual.obtenerCantidadTareas());
+    } else {
+        System.out.println("Proyecto activo: ninguno");
     }
+    System.out.println("-----------------------------------------------");
+}
+    //final codigo
+
+
+
+  private static void mostrarMenu() {
+    System.out.println(" Menú principal");
+    System.out.println(" 1. Crear proyecto");
+    System.out.println(" 2. Seleccionar proyecto");
+    System.out.println(" 3. Agregar tarea");
+    System.out.println(" 4. Cambiar estado de tarea");
+    System.out.println(" 5. Mostrar lista de tareas");
+    System.out.println(" 6. Eliminar tarea");
+    System.out.println(" 7. Listar proyectos");
+    System.out.println(" 0. Salir");
+    System.out.println("-----------------------------------------------");
+}
 
     private static void crearProyecto() {
         System.out.print("Nombre del proyecto: ");
@@ -60,7 +88,9 @@ public class Main {
         }
 
         proyectos.add(new Proyecto(nombre));
-        System.out.println("Proyecto '" + nombre + "' creado correctamente.");
+        System.out.println("\n--- Proyecto '" + nombre + "' creado correctamente ---");
+        System.out.println("-----------------------------------------------\n");
+        presionarEnterParaContinuar();
     }
 
     private static void seleccionarProyecto() {
@@ -74,10 +104,12 @@ public class Main {
 
         if (indice >= 0 && indice < proyectos.size()) {
             proyectoActual = proyectos.get(indice);
-            System.out.println("Proyecto seleccionado: " + proyectoActual.getNombre());
+            System.out.println("\n--- Proyecto seleccionado: " + proyectoActual.getNombre() + " ---");
+            System.out.println("-----------------------------------------------\n");
         } else {
-            System.out.println("Selección incorrecta. Intenta otra vez.");
+            System.out.println("\n--- Selección incorrecta. Intenta otra vez. ---\n");
         }
+        presionarEnterParaContinuar();
     }
 
     private static void agregarTarea() {
@@ -96,7 +128,9 @@ public class Main {
         }
 
         proyectoActual.agregarTarea(titulo, descripcion);
-        System.out.println("Tarea agregada al proyecto '" + proyectoActual.getNombre() + "'.");
+        System.out.println("\n--- Tarea agregada al proyecto '" + proyectoActual.getNombre() + "' ---");
+        System.out.println("-----------------------------------------------\n");
+        presionarEnterParaContinuar();
     }
 
     private static void cambiarEstadoTarea() {
@@ -113,11 +147,12 @@ public class Main {
         Tarea tarea = proyectoActual.buscarTareaPorId(id);
 
         if (tarea == null) {
-            System.out.println("No se encontró ninguna tarea con ese ID.");
+            System.out.println("\n--- No se encontró ninguna tarea con ese ID. ---\n");
+            presionarEnterParaContinuar();
             return;
         }
 
-        System.out.println("Estados disponibles:");
+        System.out.println("\nEstados disponibles:");
         for (Tarea.Estado estado : Tarea.Estado.values()) {
             System.out.println(estado.ordinal() + 1 + ". " + estado.getDescripcion());
         }
@@ -129,7 +164,9 @@ public class Main {
         }
 
         tarea.setEstado(Tarea.Estado.values()[opcion]);
-        System.out.println("Estado de la tarea actualizado a: " + tarea.getEstado().getDescripcion());
+        System.out.println("\n--- Estado actualizado: " + tarea.getEstado().getDescripcion() + " ---");
+        System.out.println("-----------------------------------------------\n");
+        presionarEnterParaContinuar();
     }
 
     private static void mostrarTareas() {
@@ -137,7 +174,9 @@ public class Main {
             return;
         }
 
+        System.out.println("\n----- Tareas del proyecto -----");
         proyectoActual.mostrarTareas();
+        System.out.println("-----------------------------------------------\n");
     }
 
     private static void eliminarTarea() {
@@ -152,10 +191,12 @@ public class Main {
 
         int id = leerEntero("Ingresa el ID de la tarea a eliminar: ");
         if (proyectoActual.eliminarTareaPorId(id)) {
-            System.out.println("Tarea eliminada correctamente.");
+            System.out.println("\n--- Tarea eliminada correctamente ---");
         } else {
-            System.out.println("No se encontró ninguna tarea con ese ID.");
+            System.out.println("\n--- No se encontró ninguna tarea con ese ID. ---");
         }
+        System.out.println("-----------------------------------------------\n");
+        presionarEnterParaContinuar();
     }
 
     private static void listarProyectos() {
@@ -164,12 +205,13 @@ public class Main {
             return;
         }
 
-        System.out.println("Proyectos disponibles:");
+        System.out.println("\n----- Proyectos disponibles -----");
         for (int i = 0; i < proyectos.size(); i++) {
             Proyecto proyecto = proyectos.get(i);
             String seleccionado = proyecto.equals(proyectoActual) ? " [Seleccionado]" : "";
             System.out.println((i + 1) + ". " + proyecto.getNombre() + " - " + proyecto.obtenerCantidadTareas() + " tareas" + seleccionado);
         }
+        System.out.println("-----------------------------------------------\n");
     }
 
     private static boolean validarProyectoSeleccionado() {
@@ -190,6 +232,12 @@ public class Main {
                 System.out.println("Por favor ingresa un número válido.");
             }
         }
+    }
+
+    private static void presionarEnterParaContinuar() {
+        System.out.print("Presiona Enter para continuar...");
+        scanner.nextLine();
+        System.out.println();
     }
 }
 
