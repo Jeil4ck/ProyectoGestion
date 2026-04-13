@@ -24,6 +24,11 @@ public class Proyecto {
         return tareas.removeIf(tarea -> tarea.getId() == id);
     }
 
+    @Override
+    public String toString() {
+        return nombre + " (" + obtenerCantidadTareas() + " tareas)";
+    }
+
     public Tarea buscarTareaPorId(int id) {
         for (Tarea tarea : tareas) {
             if (tarea.getId() == id) {
@@ -35,6 +40,22 @@ public class Proyecto {
 
     public int obtenerCantidadTareas() {
         return tareas.size();
+    }
+
+    public List<Tarea> getTareas() {
+        return new ArrayList<>(tareas);
+    }
+
+    public String obtenerTareasTexto() {
+        if (tareas.isEmpty()) {
+            return "No hay tareas en este proyecto.\n";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (Tarea tarea : tareas) {
+            builder.append(tarea).append("\n");
+        }
+        return builder.toString();
     }
 
     public void mostrarTareas() {
